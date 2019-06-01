@@ -9,9 +9,10 @@ SECRET_KEY = os.environ.get('SECRET_KEY', 'not-a-secret')
 
 ALLOWED_HOSTS = [
     '127.0.0.1',
-    'ontariobeerapi.herokuapp.com',
-    'ontariobeerapi.ca',
-    'www.ontariobeerapi.ca',
+    'beer-priankuhan.c9users.io',
+    # 'ontariobeerapi.herokuapp.com',
+    # 'ontariobeerapi.ca',
+    # 'www.ontariobeerapi.ca',
     os.environ.get('HOST', 'localhost')
 ]
 
@@ -31,7 +32,14 @@ INSTALLED_APPS = [
 ]
 
 DATABASES = {
-    'default': dj_database_url.config(default=os.environ.get('DATABASE_URL', 'postgres://localhost/beerstore'))
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'beerstore',
+        'USER': 'username',
+        'PASSWORD': 'password',
+        'HOST': 'localhost',
+        'PORT': '',
+    }
 }
 
 MIDDLEWARE = [
