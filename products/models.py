@@ -43,7 +43,6 @@ class Product(models.Model):
     product_id = models.IntegerField(primary_key=True)
     name = models.CharField(max_length=255)
     size = models.CharField(max_length=255)
-    price = models.DecimalField(max_digits=7, decimal_places=2)
     beer_id = models.IntegerField()
     image_url = models.URLField()
     category = models.CharField(max_length=255, default="N/A")
@@ -58,3 +57,14 @@ class Product(models.Model):
 
     def __unicode__(self):
         return self.name + " - " + self.size
+        
+class Price(models.Model):
+    """
+    Represents a product price at the beer store
+    """
+    price = models.DecimalField(max_digits=7, decimal_places=2)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    created_date = models.DateTimeField(auto_now_add=True)
+    
+    def __unicode__(self):
+        return str(self.price)

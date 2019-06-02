@@ -2,7 +2,7 @@
 import requests
 from bs4 import BeautifulSoup
 from django.core.management.base import BaseCommand
-from products.models import Product
+from products.models import Product, Price
 from .url_settings import TOP_URL
 import pdb; 
 
@@ -161,8 +161,11 @@ class Command(BaseCommand):
                             product_entry.abv = float(beer_abv)
                             product_entry.brewer= beer_brewer
                             
-                            product_entry.price = float(beer_product_price.strip()[1:])
                             product_entry.on_sale = beer_on_sale
-                            
     
                             product_entry.save()
+                            
+                            price_entry = Price()
+                            price_entry.price = float(beer_product_price.strip()[1:])
+                            price_entry.product = product_entry
+                            price_entry.save()

@@ -4,7 +4,7 @@ from decimal import Decimal
 from django.core.serializers.json import DjangoJSONEncoder
 from django.forms import model_to_dict
 from django.http import HttpResponse, JsonResponse
-from .models import Store, Product
+from .models import Store, Product, Price
 
 
 def _response(request, result, encoder=DjangoJSONEncoder):
@@ -124,14 +124,19 @@ def product_by_id(request, product_id):
     # get product by id
     product = Product.objects.get(product_id = int(product_id))
 
-    class ProductEncoder(DjangoJSONEncoder):
-        def default(self, o):
-            if isinstance(o, Store):
-                return super().encode(model_to_dict(o))
-            return super().default(o)
+    # class ProductEncoder(DjangoJSONEncoder):
+    #     def default(self, o):
+    #         if isinstance(o, Store):
+    #             return super().encode(model_to_dict(o))
+    #         return super().default(o)
 
-    # return data
-    return _response(request, model_to_dict(product), encoder=ProductEncoder)
+    qs = Price.objects.filter(product=product)[:30]
+
+    model_dict = model_to_dict(product)
+    model_dict['prices'] = [{'x': o.created_date.strftime('%s'), 'y': str(o.price)} for o in qs]
+    
+    # return data   
+    return _response(request, model_dict)
 
 
 def products_at_store(request, store_id):
