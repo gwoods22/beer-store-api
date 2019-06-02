@@ -32,14 +32,15 @@ INSTALLED_APPS = [
 ]
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'beerstore',
-        'USER': 'username',
-        'PASSWORD': 'password',
-        'HOST': 'localhost',
-        'PORT': '',
-    }
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.postgresql_psycopg2',
+    #     'NAME': 'beerstore',
+    #     'USER': 'username',
+    #     'PASSWORD': 'password',
+    #     'HOST': 'localhost',
+    #     'PORT': '',
+    # }
+    'default': dj_database_url.config(default=os.environ.get('DATABASE_URL', 'postgres://localhost/beerstore'))
 }
 
 MIDDLEWARE = [
@@ -71,3 +72,6 @@ TEMPLATES = [
 
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+# Configure Django App for Heroku.
+import django_heroku
+django_heroku.settings(locals())
