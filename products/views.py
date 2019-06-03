@@ -5,6 +5,7 @@ from django.core.serializers.json import DjangoJSONEncoder
 from django.forms import model_to_dict
 from django.http import HttpResponse, JsonResponse
 from .models import Store, Product, Price
+from django.shortcuts import render
 
 
 def _response(request, result, encoder=DjangoJSONEncoder):
@@ -130,14 +131,27 @@ def product_by_id(request, product_id):
     #             return super().encode(model_to_dict(o))
     #         return super().default(o)
 
-    qs = Price.objects.filter(product=product)[:30]
+    qs = Price.objects.filter(product=product).order_by('-created_date')[:30]
 
     model_dict = model_to_dict(product)
-    model_dict['prices'] = [{'x': o.created_date.strftime('%s'), 'y': str(o.price)} for o in qs]
+    model_dict['prices'] = [{'x': float(o.created_date.strftime('%s'))* 1000, 'y': float(o.price)} for o in qs]
+    model_dict['current_price'] = qs.first().price
     
     # return data   
     return _response(request, model_dict)
+    
+def product_prices_by_id(request, product_id):
+    # get product by id
+    product = Product.objects.get(product_id = int(product_id))
 
+    qs = Price.objects.filter(product=product).order_by('-created_date')[:30]
+    
+    model_dict = model_to_dict(product)
+    model_dict['prices'] = json.dumps([{'x': float(o.created_date.strftime('%s'))* 1000, 'y': float(o.price)} for o in qs])
+    model_dict['current_price'] = qs.first().price
+    
+    # return data   
+    return render(request, 'product_prices.html', context={'params': model_dict})
 
 def products_at_store(request, store_id):
     """

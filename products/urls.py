@@ -51,6 +51,13 @@ urlpatterns = [
         view=views.product_by_id,
         name="beer_store_api"
     ),
+    
+    # /product_prices/{product_id}
+    url(
+        regex=r"^product_prices/(?P<product_id>[0-9]+)/$",
+        view=views.product_prices_by_id,
+        name="beer_store_api"
+    ),
 
     # /stores/{store_id}/products
     url(
