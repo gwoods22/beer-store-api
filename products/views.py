@@ -6,7 +6,7 @@ from django.forms import model_to_dict
 from django.http import HttpResponse, JsonResponse
 from .models import Store, Product, Price
 from django.shortcuts import render
-
+from django.contrib.postgres.search import SearchQuery, SearchRank, SearchVector
 
 def _response(request, result, encoder=DjangoJSONEncoder):
     if request.GET.get('format', None) == 'html':
@@ -281,6 +281,18 @@ def beers(request):
 
     # return data
     return _response(request, list(beers.values()))
+
+def search(request):
+    beers = Product.objects
+    
+    if request.method == 'GET': 
+        search_query = request.GET.get('search_box', None)
+        
+        vector = SearchVector('name', 'brewer')
+        query = SearchQuery(search_query)
+        beers = beers.annotate(rank=SearchRank(vector, query)).filter(rank__gte=0.00000000000001).order_by('-rank', 'beer_id').distinct('rank','beer_id')
+        
+        return render(request, 'search.html', context={'beers': list(beers.values()), 'query': search_query})
 
 
 def beer_by_id(request, beer_id):

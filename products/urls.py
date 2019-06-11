@@ -79,4 +79,6 @@ urlpatterns = [
         view=views.stores_with_product,
         name="beer_store_api"
     ),
+    
+    url(r'^search/?$', view=views.search, name='beer_search'),
 ]

@@ -31,17 +31,17 @@
       
       <ul class="navbar-nav mr-auto">
         <li class="nav-item active">
-          <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+          <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="#">Sign up</a>
         </li>
       </ul>
-      
-      <form class="form-inline my-2 my-lg-0">
-        <input class="form-control mr-sm-2" type="search" placeholder="Enter a BeerStore URL or keywords to find products" aria-label="Search" style="width: 700px;">
-        <button class="btn btn-outline-secondary my-2 my-sm-0" type="submit">Search</button>
-      </form>
+    
+    <form class="form-inline my-2 my-lg-0" type="get" action="/search" style="margin: 0">
+        <input style="width: 700px;" class="form-control mr-sm-2" id="search_box" value="{{query}}" type="search" name="search_box"  placeholder="Enter keywords to find products" >
+        <button class="btn btn-outline-secondary my-2 my-sm-0" id="search_submit" type="submit" >Search</button>
+    </form>
     </div>
   </nav>
   <div class="container" style='padding-top:15px'>
@@ -54,8 +54,6 @@
       </div>
     </footer>
   </div>
-    
-
 
     {% block scripts %}
     {% endblock %}

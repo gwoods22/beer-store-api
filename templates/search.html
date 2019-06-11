@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% block title %}Search Results - {{query}}{% endblock %}
+
+{% block content %}
+
+<style>
+  .beer:hover {
+    background-color: #e2e2e2;
+    cursor:pointer;
+    border-radius: 15px;
+  }
+  
+  .beer {
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
+  
+  a.nostyle:link {
+    text-decoration: inherit;
+    color: inherit;
+}
+
+  a.nostyle:visited {
+      text-decoration: inherit;
+      color: inherit;
+  }
+</style>
+
+<div class='row' style="margin-bottom:25px"><h1>Search Results</h1></div>
+<div class="row">
+  {% for beer in beers %}
+    <div class="col-lg-2 col-sm-3 col-6 beer" >
+      <a class='nostyle' href='/beer_prices/{{beer.beer_id}}'>
+        <div>
+          <img style="width: 100%;height: 100%;object-fit:contain;border-radius: 15px;border: solid Gainsboro 1px;" src="{{ beer.image_url }}">
+        </div>
+        <h5 style='margin-bottom:0px'>{{ beer.name }}</h5>
+        <p style='margin-bottom:0px'>{{ beer.brewer }}</p>
+      </a>
+    </div>
+    
+  {% endfor %}
+</div>
+
+<script>
+
+</script>
+{% endblock %}
