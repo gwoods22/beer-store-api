@@ -3,6 +3,12 @@ from products import views
 
 urlpatterns = [
 
+    url(
+        regex=r"^$",
+        view=views.home,
+        name="landing_page"
+    ),
+
     # /stores
     url(
         regex=r"^stores/$",

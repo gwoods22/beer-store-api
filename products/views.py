@@ -32,7 +32,14 @@ def _response(request, result, encoder=DjangoJSONEncoder):
 
     return JsonResponse(result, safe=False, encoder=encoder)
 
-
+def home(request):
+    """
+    Returns home page
+    """
+    beers = Product.objects.filter(on_sale=True).distinct('beer_id')
+    
+    return render(request, 'index.html', context={'beers': list(beers.values())})
+    
 def stores(request):
     """
     Returns data on all Beer Store locations
