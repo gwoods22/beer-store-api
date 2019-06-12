@@ -8,6 +8,12 @@ urlpatterns = [
         view=views.home,
         name="landing_page"
     ),
+    
+        url(
+        regex=r"^deals/$",
+        view=views.deals,
+        name="deals_page"
+    ),
 
     # /stores
     url(

@@ -1,0 +1,126 @@
+{% extends 'base.html' %}
+
+{% load general %}
+
+{% block title %}Best Deals{% endblock %}
+
+{% block content %}
+
+<style>
+  .beer:hover {
+    background-color: #e2e2e2;
+    cursor:pointer;
+    border-radius: 15px;
+  }
+  
+  .beer {
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
+  
+  a.nostyle:link {
+    text-decoration: inherit;
+    color: inherit;
+}
+
+  a.nostyle:visited {
+      text-decoration: inherit;
+      color: inherit;
+  }
+  .col-xs-5ths,
+  .col-sm-5ths,
+  .col-md-5ths,
+  .col-lg-5ths {
+      position: relative;
+      min-height: 1px;
+      padding-right: 15px;
+      padding-left: 15px;
+  }
+  
+  .col-xs-5ths {
+      width: 20%;
+      float: left;
+  }
+  
+  @media (min-width: 768px) {
+      .col-sm-5ths {
+          width: 20%;
+          float: left;
+      }
+  }
+  
+  @media (min-width: 992px) {
+      .col-md-5ths {
+          width: 20%;
+          float: left;
+      }
+  }
+  
+  @media (min-width: 1200px) {
+      .col-lg-5ths {
+          width: 20%;
+          float: left;
+      }
+  }
+</style>
+
+<div class='row' style="margin-bottom:25px"><h1>Best Deals</h1></div>
+<div class="row">
+  {% for size_category in ordered_size_categories %}
+    {% with size_filtered_products=deals|get_item:size_category %}
+    {% if size_filtered_products|length != 0 %}
+      <div class="col-lg-4" style="border-left: solid 0.5px Gainsboro;margin-bottom:50px">
+        <h3>{{size_category}}</h3>
+        <div id="accordion-{{size_category}}">
+          {% for type_category, products in size_filtered_products.items %}
+            <div class="card">
+              <div class="card-header" id="heading-{{size_category}}{{type_category}}">
+                <h5 class="mb-0">
+                  <button style="width: 100%;color:black;text-decoration: inherit;" class="btn btn-link" data-toggle="collapse" data-target="#collapse-{{size_category}}{{type_category}}" aria-controls="collapse-{{size_category}}{{type_category}}">
+                    <div>
+                      <span style='float:left'>
+                        <b style="font-size: 12pt;">{{ type_category }}</b>
+                      </span>
+                    </div>
+                  </button>
+                </h5>
+              </div>
+              <div id="collapse-{{size_category}}{{type_category}}" class="collapse" aria-labelledby="heading-{{size_category}}{{type_category}}">
+                <div class="card-body">
+                  <div class='row'>
+                      <div class='col'>
+                        {% for beer in products %}
+                          <a class='nostyle' href='/beer_prices/{{beer.beer_id}}'>
+                            <div class="row" style="padding-top: 10px;bottom: 10px;">
+                              <div class='col-4'>
+                                <img style="width: 100%;height: 100%;object-fit:contain;border-radius: 15px;border: solid Gainsboro 1px;" src="{{ beer.image_url }}">
+                              </div>
+                              <div class='col-8'>
+                                <div><b style='font-size: 14pt;'>{{ beer.name }}</b></div>
+                                <b> ${{beer.price_per_100ml|floatformat:2}}</b>/100ml
+                                <div style="font-size:10pt">{{ beer.size }}<span style='color:gray;font-size:10pt'></span> - ${{beer.current_price}}</div>
+                                {% if beer.on_sale %}
+                                  <span><b style="color: red">On Sale!</b></span>
+                                {% endif %}
+                              </div>
+                            </div>
+                          </a>
+                        {% endfor %}
+                      </div>
+                    
+                  </div>
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    {% endif %}
+    {% endwith %}
+  {% endfor %}
+</div>
+
+<script>
+
+</script>
+{% endblock %}

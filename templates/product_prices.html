@@ -3,7 +3,17 @@
 {% block title %}{{ params.name }}{% endblock %}
 
 {% block content %}
+<style>
+  a.nostyle:link {
+    text-decoration: inherit;
+    color: inherit;
+}
 
+  a.nostyle:visited {
+      text-decoration: inherit;
+      color: inherit;
+  }
+</style>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.min.js"></script>
@@ -16,13 +26,15 @@
     <div><b>Alcohol Content (ABV):</b> {{ params.abv }}</div>
   </div>
   <div class="col-lg-8">
-    <h1>{{ params.name }}</h1>
+    <a class='nostyle' href='/beer_prices/{{params.beer_id}}'><h1>{{ params.name }}</h1></a>
     <h4 style="color:gray">{{ params.size }}</h4>
     <div style="font-size: 14pt;">
       <b>Price:</b> ${{params.current_price}} 
       {% if params.on_sale %}
         <span><b style="color: red">On Sale!</b></span>
       {% endif %}
+      <div style='color:gray;font-size:12pt'>${{params.price_per_100ml|floatformat:2}}/100ml</div> 
+      <div style='color:gray;font-size:12pt'>${{params.price_per_abv|floatformat:2}}/ml of EtOH </div> 
     </div>    
     <div style='text-align:center;padding-top:20px'><h5>Price History</h5></div>
     <canvas id="myChart" ></canvas>

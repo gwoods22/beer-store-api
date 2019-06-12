@@ -47,14 +47,19 @@
                 <div class="card">
                   <div class="card-header" id="heading-{{product.product_id}}">
                     <h5 class="mb-0">
-                      <button style="color:black;text-decoration: inherit;" class="btn btn-link" data-toggle="collapse" data-target="#collapse-{{product.product_id}}" aria-expanded="{{product.on_sale}}" aria-controls="collapse-{{product.product_id}}">
-                        <b style="font-size: 12pt;">{{ product.size }}</b>
-                        <span style="font-size: 12pt;">
-                          - ${{product.current_price}} 
-                          {% if product.on_sale %}
-                            <span><b style="color: red">On Sale!</b></span>
-                          {% endif %}
-                        </span>  
+                      <button style="width: 100%;color:black;text-decoration: inherit;" class="btn btn-link" data-toggle="collapse" data-target="#collapse-{{product.product_id}}" aria-expanded="{{product.on_sale}}" aria-controls="collapse-{{product.product_id}}">
+                        <div>
+                          <span style='float:left'>
+                            <b style="font-size: 12pt;">{{ product.size }}</b>
+                            <span style="font-size: 12pt;">
+                              - ${{product.current_price}} 
+                              {% if product.on_sale %}
+                                <span><b style="color: red">On Sale!</b></span>
+                              {% endif %}
+                            </span>  
+                          </span>
+                          <span style='color:gray;font-size:12pt;float:right'>${{product.price_per_100ml|floatformat:2}}/100ml</span> 
+                        </div>
                       </button>
                     </h5>
                   </div>

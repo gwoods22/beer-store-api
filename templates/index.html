@@ -27,9 +27,13 @@
   }
 </style>
 
-<div class='row' style="margin-bottom:25px"><h1>Currently On Sale</h1></div>
+<div class='row' style="margin-bottom:25px">
+  <h2>Cheers!</h2>
+  <p>Browse price history of products in The Beer Store, as well as other fun stuff like price per volume. Also, find a summary of the best deals sorted by category <a href='/deals'>here</a>.</p>
+</div>
+<div class='row' style="margin-bottom:25px"><h2>On Sale</h2>
 <div class="row">
-  {% for beer in beers %}
+  {% for beer in on_sale %}
     <div class="col-lg-2 col-sm-3 col-6 beer" >
       <a class='nostyle' href='/beer_prices/{{beer.beer_id}}'>
         <div>
