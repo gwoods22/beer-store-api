@@ -7,7 +7,7 @@ from .url_settings import TOP_URL
 import pdb; 
 
 import json
-
+import sys
 from selenium import webdriver
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -83,6 +83,8 @@ class Command(BaseCommand):
                 try:
                     beer_html = browser.get(beer_url)
                 except:
+                    print("Trynna get:", beer_url)
+                    print("Unexpected error:", sys.exc_info()[0])
                     browser.quit()
                     continue
 
