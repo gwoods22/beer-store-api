@@ -39,6 +39,7 @@ class Command(BaseCommand):
             )
         except TimeoutException:
             print('Loading took too much time!')
+            sys.stdout.flush()
         else:
             html = browser.page_source
         finally:
@@ -86,6 +87,7 @@ class Command(BaseCommand):
                     print("Trynna get:", beer_url)
                     print("Unexpected error:", sys.exc_info()[0])
                     browser.quit()
+                    sys.stdout.flush()
                     continue
 
                 try:
@@ -95,6 +97,7 @@ class Command(BaseCommand):
                     )
                 except TimeoutException:
                     print('Loading took too much time!')
+                    sys.stdout.flush()
                 else:
                     beer_html = browser.page_source
                 finally:
