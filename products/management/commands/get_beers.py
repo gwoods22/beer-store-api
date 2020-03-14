@@ -79,8 +79,14 @@ class Command(BaseCommand):
                 browser = webdriver.Chrome(chrome_options=chrome_options)
                 
                 beer_url = beer["href"]
-                beer_html = browser.get(beer_url)
-                
+
+                try:
+                    beer_html = browser.get(beer_url)
+                except:
+                    continue
+                finally:
+                    browser.quit()
+
                 try:
                     # wait for data to be loaded
                     WebDriverWait(browser, delay).until(
