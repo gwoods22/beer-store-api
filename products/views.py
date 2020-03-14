@@ -45,7 +45,7 @@ def home(request):
     
     return render(request, 'index.html', context={'on_sale': list(on_sale.values())})
     
-@cache_page(60 * 60 * 6)
+@cache_page(60 * 60)
 def deals(request):
     """
     Returns home page
