@@ -83,9 +83,8 @@ class Command(BaseCommand):
                 try:
                     beer_html = browser.get(beer_url)
                 except:
-                    continue
-                finally:
                     browser.quit()
+                    continue
 
                 try:
                     # wait for data to be loaded
