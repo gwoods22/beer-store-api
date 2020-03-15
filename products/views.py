@@ -125,6 +125,8 @@ class ProductsListView(ListView):
     def get_queryset(self):
         size = self.request.GET.get('size', 'All Sizes')
         category = self.request.GET.get('category', 'All Categories')
+        sort = self.request.GET.get('sort', 'price_per_100ml')
+
         qs = Product.objects.exclude(category="Non Beer").exclude(category="Non-Alcoholic Beer")
 
         grouped_products = {}
@@ -168,7 +170,10 @@ class ProductsListView(ListView):
         if category in ['Value', 'Premium', 'Ontario Craft', 'Import', 'Domestic Specialty']:
             qs = qs.filter(category=category)
 
-        return qs.order_by('price_per_100ml')
+        if sort == 'price_per_abv':
+            return qs.order_by('price_per_abv')
+        else:
+            return qs.order_by('price_per_100ml')
 
     def get_context_data(self, **kwargs):
         context = super(ProductsListView, self).get_context_data(**kwargs)
@@ -178,14 +183,21 @@ class ProductsListView(ListView):
 
         size = self.request.GET.get('size', 'All Sizes')
         category = self.request.GET.get('category', 'All Categories')
+        sort = self.request.GET.get('sort', 'price_per_100ml')
 
         if size not in allowed_sizes:
             size = "All Sizes"
         if category not in allowed_categories:
             category = "All Categories"
+        if sort == "price_per_abv":
+            sort_name = '$/etOH (alcohol content)'
+        else:
+            sort_name = '$/100ml'
 
         context['size'] = size
         context["category"] = category
+        context["sort"] = sort
+        context["sort_name"] = sort_name
         context['sizes'] = allowed_sizes
         context['categories'] = allowed_categories
 

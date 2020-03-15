@@ -86,7 +86,7 @@
         </button>
         <ul class="dropdown-menu">
             {% for new_size in sizes %}
-              <a class="dropdown-item" href="/all-beers?categories={{ category }}&size={{ new_size }}">{{ new_size }}</a>
+              <a class="dropdown-item" href="/all-beers?category={{ category }}&size={{ new_size }}&sort={{ sort }}">{{ new_size }}</a>
             {% endfor %}
         </ul>
       </div>
@@ -99,8 +99,20 @@
         </button>
         <ul class="dropdown-menu">
             {% for new_cat in categories %}
-              <a class="dropdown-item" href="/all-beers?categories={{ new_cat }}&size={{ size }}">{{ new_cat }}</a>
+              <a class="dropdown-item" href="/all-beers?category={{ new_cat }}&size={{ size }}&sort={{ sort }}">{{ new_cat }}</a>
             {% endfor %}
+        </ul>
+      </div>
+    </span>
+    <span style="padding-left:10px">
+      <b>Sort by:&nbsp;</b>
+      <div class="dropdown">
+        <button class="btn btn-sm btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          {{ sort_name }} <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu">
+          <a class="dropdown-item" href="/all-beers?category={{ category }}&size={{ size }}&sort=price_per_100ml">$/100ml</a>
+          <a class="dropdown-item" href="/all-beers?category={{ category }}&size={{ size }}&sort=price_per_abv">$/etOH (alcohol content)</a>
         </ul>
       </div>
     </span>
@@ -130,7 +142,11 @@
               </div>
               <div class='col-8'>
                 <div><b style='font-size: 14pt;'>{{ beer.name }}</b></div>
-                <b> ${{beer.price_per_100ml|floatformat:2}}</b>/100ml
+                {%  if sort == "price_per_abv" %}
+                    <b> ${{beer.price_per_abv|floatformat:2}}</b>/10ml of etOH
+                {% else %}
+                    <b> ${{beer.price_per_100ml|floatformat:2}}</b>/100ml
+                {% endif %}
                 <div style="font-size:10pt">{{ beer.size }}<span style='color:gray;font-size:10pt'></span> - ${{beer.current_price}}</div>
                 {% if beer.on_sale %}
                   <span><b style="color: red">On Sale!</b></span>

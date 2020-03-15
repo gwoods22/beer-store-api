@@ -176,7 +176,7 @@ class Command(BaseCommand):
                             units = int(size[0])
                             mls = int(size[-2])
                             product_entry.price_per_100ml = round((price / (units * mls / 100)), 2) if (units * mls / 100) > 0 else 0
-                            product_entry.price_per_abv = round((price / (float(product_entry.abv) * units * mls / 100)), 2) if (float(product_entry.abv) * units * mls / 100) else 0
+                            product_entry.price_per_abv = round((price * 10.0/ (float(product_entry.abv) * units * mls / 100)), 2) if (float(product_entry.abv) * units * mls / 100) else 0
                             product_entry.current_price = price
                             product_entry.save()
                             
