@@ -96,15 +96,17 @@ def deals(request):
                 for product in products:
                     product_dict = model_to_dict(product)
 
-                    current_price = Price.objects.filter(product=product).order_by('-created_date').first().price
-                    size = product.size.replace('NEW', '').split()
-                    units = int(size[0])
-                    mls = int(size[-2])
-                    
-                    product_dict['price_per_100ml'] = round((float(current_price) / (units*mls/100.0)),2)
-                    product_dict['current_price'] = current_price
-                    
-                    product_dicts.append(product_dict)
+                    price_obj = Price.objects.filter(product=product).order_by('-created_date').first()
+                    if price_obj:
+                        current_price = price_obj.price
+                        size = product.size.replace('NEW', '').split()
+                        units = int(size[0])
+                        mls = int(size[-2])
+
+                        product_dict['price_per_100ml'] = round((float(current_price) / (units*mls/100.0)),2)
+                        product_dict['current_price'] = current_price
+
+                        product_dicts.append(product_dict)
                 sorted_deals = sorted(product_dicts, key=itemgetter('price_per_100ml')) 
                 deals[size_category] = deals.get(size_category) or {}
                 deals[size_category][type_category] = sorted_deals[:10]
