@@ -54,6 +54,8 @@ class Product(models.Model):
     country = models.CharField(max_length=255, default="N/A")
     on_sale = models.BooleanField(default=False)
     stores = models.ManyToManyField(Store, blank=True)
+    price_per_100ml = models.DecimalField(max_digits=4, decimal_places=2, default=None, blank=True, null=True)
+    price_per_abv = models.DecimalField(max_digits=4, decimal_places=2, default=None, blank=True, null=True)
 
     def __unicode__(self):
         return self.name + " - " + self.size

@@ -165,16 +165,22 @@ class Command(BaseCommand):
                             product_entry.image_url = beer_image.strip()
                             product_entry.country = beer_country.strip()
                             product_entry.type = ""
-                            
                             product_entry.category = beer_category
                             product_entry.abv = float(beer_abv)
                             product_entry.brewer= beer_brewer
-                            
                             product_entry.on_sale = beer_on_sale
-    
+
+                            price = float(beer_product_price.strip()[1:])
+
+                            size = product_entry.size.replace('NEW', '').split()
+                            units = int(size[0])
+                            mls = int(size[-2])
+                            product_entry.price_per_100ml = round((price / (units * mls / 100)), 2) if (units * mls / 100) > 0 else 0
+                            product_entry.price_per_abv = round((price / (float(product_entry.abv) * units * mls / 100)), 2) if (float(product_entry.abv) * units * mls / 100) else 0
+
                             product_entry.save()
                             
                             price_entry = Price()
-                            price_entry.price = float(beer_product_price.strip()[1:])
+                            price_entry.price = price
                             price_entry.product = product_entry
                             price_entry.save()

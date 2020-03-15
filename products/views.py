@@ -117,9 +117,9 @@ def deals(request):
                 deals[size_category][type_category] = sorted_deals[:10]
         deals[size_category]["All Categories"] = sorted(all_categories_product_dicts, key=itemgetter('price_per_100ml'))[:10]
 
-    deals["All Sizes"] = {}
-    for category, product_dicts in all_product_dicts.items():
-        deals["All Sizes"][category] = sorted(product_dicts, key=itemgetter('price_per_100ml'))[:10]
+    # deals["All Sizes"] = {}
+    # for category, product_dicts in all_product_dicts.items():
+    #     deals["All Sizes"][category] = sorted(product_dicts, key=itemgetter('price_per_100ml'))[:10]
 
     return render(request, 'deals.html', context={
         'deals': deals,
