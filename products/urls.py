@@ -4,13 +4,13 @@ from products import views
 urlpatterns = [
 
     url(
-        regex=r"^$",
+        regex=r"^on-sale/$",
         view=views.home,
         name="landing_page"
     ),
     
         url(
-        regex=r"^deals/$",
+        regex=r"^$",
         view=views.deals,
         name="deals_page"
     ),
