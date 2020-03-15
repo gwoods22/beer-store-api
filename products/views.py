@@ -87,12 +87,10 @@ def deals(request):
                             | Q(size__startswith='48 X'))
     grouped_products['Kegs'] = qs.filter(size__icontains='keg')
 
-    all_product_dicts = defaultdict(list)
     deals = {}
     for size_category, size_filtered_products in grouped_products.items():
-        all_categories_product_dicts = []
         for type_category in list(Product.objects.order_by().values_list('category',flat=True).distinct()):
-            if type_category != 'Non-Alcoholic Beer' and type_category != "Non Beer":
+            if type_category != 'Non-Alcoholic Beer':    
                 products = size_filtered_products.filter(category=type_category)
                 product_dicts = []
                 for product in products:
@@ -109,23 +107,11 @@ def deals(request):
                         product_dict['current_price'] = current_price
 
                         product_dicts.append(product_dict)
-                        all_categories_product_dicts.append(product_dict)
-                        all_product_dicts[type_category].append(product_dict)
-                        all_product_dicts["All Categories"].append(product_dict)
                 sorted_deals = sorted(product_dicts, key=itemgetter('price_per_100ml')) 
                 deals[size_category] = deals.get(size_category) or {}
                 deals[size_category][type_category] = sorted_deals[:10]
-        deals[size_category]["All Categories"] = sorted(all_categories_product_dicts, key=itemgetter('price_per_100ml'))[:10]
-
-    deals["All Sizes"] = {}
-    for category, product_dicts in all_product_dicts.items():
-        deals["All Sizes"][category] = sorted(product_dicts, key=itemgetter('price_per_100ml'))[:10]
-
-    return render(request, 'deals.html', context={
-        'deals': deals,
-        'ordered_size_categories': ['All Sizes', 'Singles', 'Small Packs', 'Medium Packs', 'Large Packs', 'Kegs'],
-        'ordered_categories': ['All Categories', 'Value', 'Premium', 'Ontario Craft', 'Import', 'Domestic Specialty']
-    })
+    
+    return render(request, 'deals.html', context={'deals': deals, 'ordered_size_categories': ['Singles', 'Small Packs', 'Medium Packs', 'Large Packs', 'Kegs']})
 
 def get_price_per_100ml(product):
     current_price = Price.objects.filter(product=product).order_by('-created_date').first().price

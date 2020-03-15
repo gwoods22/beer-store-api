@@ -64,17 +64,7 @@
   }
 </style>
 
-<div class='row' style="margin-bottom:25px">
-    <h1>Cheers!</h1>
-    <p>Browse price history of products in The Beer Store, as well as other fun stuff like price per volume. Also, find a summary of products currently discounted at The Beer Store <a href='/on-sale'>here</a>.</p>
-</div>
-<div class='row'>
-    <h2>Best Deals</h2>
-</div>
-<div class='row' style="margin-bottom:25px">
-    <p>Find the beers with the lowest prices by volume available at the beer store, organized by pack size and category.</p>
-</div>
-
+<div class='row' style="margin-bottom:25px"><h1>Best Deals</h1></div>
 <div class="row">
   {% for size_category in ordered_size_categories %}
     {% with size_filtered_products=deals|get_item:size_category %}
@@ -82,7 +72,7 @@
       <div class="col-lg-4" style="border-left: solid 0.5px Gainsboro;margin-bottom:50px">
         <h3>{{size_category}}</h3>
         <div id="accordion-{{size_category}}">
-          {% for type_category in ordered_categories %}
+          {% for type_category, products in size_filtered_products.items %}
             <div class="card">
               <div class="card-header" id="heading-{{size_category}}{{type_category}}">
                 <h5 class="mb-0">
@@ -99,8 +89,7 @@
                 <div class="card-body">
                   <div class='row'>
                       <div class='col'>
-                      {% with cat_filtered_products=size_filtered_products|get_item:type_category %}
-                        {% for beer in cat_filtered_products %}
+                        {% for beer in products %}
                           <a class='nostyle' href='/beer_prices/{{beer.beer_id}}'>
                             <div class="row" style="padding-top: 10px;bottom: 10px;">
                               <div class='col-4'>
@@ -117,8 +106,6 @@
                             </div>
                           </a>
                         {% endfor %}
-                      {% endwith %}
-
                       </div>
                     
                   </div>
