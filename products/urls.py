@@ -15,6 +15,12 @@ urlpatterns = [
         name="deals_page"
     ),
 
+    url(
+        regex=r"^all-beers/$",
+        view=views.ProductsListView.as_view(),
+        name='product-list'
+    ),
+
     # /stores
     url(
         regex=r"^stores/$",

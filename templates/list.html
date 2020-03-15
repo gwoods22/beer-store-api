@@ -1,0 +1,144 @@
+{% extends 'base.html' %}
+
+{% load general %}
+
+{% block title %}Beers | {{ category }} - {{ size }}{% endblock %}
+
+{% block content %}
+
+<style>
+  .beer:hover {
+    background-color: #e2e2e2;
+    cursor:pointer;
+    border-radius: 15px;
+  }
+  
+  .beer {
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
+  
+  a.nostyle:link {
+    text-decoration: inherit;
+    color: inherit;
+}
+
+  a.nostyle:visited {
+      text-decoration: inherit;
+      color: inherit;
+  }
+  .col-xs-5ths,
+  .col-sm-5ths,
+  .col-md-5ths,
+  .col-lg-5ths {
+      position: relative;
+      min-height: 1px;
+      padding-right: 15px;
+      padding-left: 15px;
+  }
+  
+  .col-xs-5ths {
+      width: 20%;
+      float: left;
+  }
+  
+  @media (min-width: 768px) {
+      .col-sm-5ths {
+          width: 20%;
+          float: left;
+      }
+  }
+  
+  @media (min-width: 992px) {
+      .col-md-5ths {
+          width: 20%;
+          float: left;
+      }
+  }
+  
+  @media (min-width: 1200px) {
+      .col-lg-5ths {
+          width: 20%;
+          float: left;
+      }
+  }
+    a.btn {border-radius: .25rem; border: 1px solid transparent; padding: .5rem 1rem; color: #fff; }
+    a.btn:hover { border-radius: .25rem; }
+
+  div.beer:hover {
+      background-color: gainsboro;
+      transition: 0.3s;
+  }
+</style>
+
+<div class='row'>
+    <h2>Beers</h2>
+</div>
+<div class='row'>
+    Find beers sorted by price per volume.
+</div>
+<div class='row'>
+    <b>Size:&nbsp;</b> {{ size }}
+</div>
+<div class='row' style="margin-bottom:25px">
+    <b>Category:&nbsp;</b> {{ category }}
+</div>
+<div class="pagination" style="margin-bottom: 10px;">
+        <span class="step-links" style="margin-left: auto;margin-right: 0;text-align: right">
+            {% if page_obj.has_previous %}
+                <a href="?page={{ page_obj.previous_page_number }}" class="btn btn-secondary">previous</a>
+            {% endif %}
+
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}" class="btn btn-secondary">next</a>
+            {% endif %}
+            <div style="text-align: right">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</div>
+
+        </span>
+</div>
+
+
+<div class="row">
+    {% for beer in page_obj %}
+      <div class="col-md-6">
+          <a class='nostyle' href='/beer_prices/{{beer.beer_id}}'>
+            <div class="row beer" style="padding-top: 10px;bottom: 10px;">
+              <div class='col-4'>
+                <img style="width: 100%;height: 100%;object-fit:contain;border-radius: 15px;border: solid Gainsboro 1px;" src="{{ beer.image_url }}">
+              </div>
+              <div class='col-8'>
+                <div><b style='font-size: 14pt;'>{{ beer.name }}</b></div>
+                <b> ${{beer.price_per_100ml|floatformat:2}}</b>/100ml
+                <div style="font-size:10pt">{{ beer.size }}<span style='color:gray;font-size:10pt'></span> - ${{beer.current_price}}</div>
+                {% if beer.on_sale %}
+                  <span><b style="color: red">On Sale!</b></span>
+                {% endif %}
+              </div>
+            </div>
+          </a>
+      </div>
+    {% endfor %}
+</div>
+
+<div class="pagination" style="justify-content: center;margin-top: 25px;">
+    <span class="step-links">
+        {% if page_obj.has_previous %}
+            <a href="?page=1" class="btn btn-dark">&laquo; first</a>
+            <a href="?page={{ page_obj.previous_page_number }}" class="btn btn-secondary">previous</a>
+        {% endif %}
+
+        <span class="current">
+            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+        </span>
+
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}" class="btn btn-secondary">next</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}" class="btn btn-dark">last &raquo;</a>
+        {% endif %}
+    </span>
+</div>
+
+<script>
+
+</script>
+{% endblock %}

@@ -116,7 +116,7 @@ class Command(BaseCommand):
                     beer_image = TOP_URL + "/" + soup_beer.find("div","brand-img").img["src"]
         
                     # get country and type
-                    beer_country =  soup_beer.find("h4","brand-brewed").get_text().split()[-1]
+                    beer_country =  soup_beer.find("h4","brand-brewed").get_text().split(" brewed in ")[-1] or soup_beer.find("h4","brand-brewed").get_text().split()[-1]
                     beer_type = soup_beer.find("h4","brand-brewed").get_text().split()[2]
                     attrs = soup_beer.find_all("span", "brand-description")
                     beer_category = ""

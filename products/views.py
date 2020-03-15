@@ -45,12 +45,12 @@ def home(request):
     
     return render(request, 'index.html', context={'on_sale': list(on_sale.values())})
     
-@cache_page(60 * 60)
+# @cache_page(60 * 60)
 def deals(request):
     """
     Returns home page
     """
-    qs = Product.objects
+    qs = Product.objects.exclude(category="Non Beer").exclude(category="Non-Alcoholic Beer")
     
     grouped_products = {}
     grouped_products['Singles'] = qs.filter(size__startswith='1 X').exclude(size__icontains='keg')
@@ -87,45 +87,103 @@ def deals(request):
                             | Q(size__startswith='48 X'))
     grouped_products['Kegs'] = qs.filter(size__icontains='keg')
 
-    all_product_dicts = defaultdict(list)
-    deals = {}
+    deals = defaultdict(lambda: defaultdict(list))
     for size_category, size_filtered_products in grouped_products.items():
-        all_categories_product_dicts = []
-        for type_category in list(Product.objects.order_by().values_list('category',flat=True).distinct()):
+        for type_category in list(qs.order_by().values_list('category',flat=True).distinct()):
             if type_category != 'Non-Alcoholic Beer' and type_category != "Non Beer":
-                products = size_filtered_products.filter(category=type_category)
-                product_dicts = []
-                for product in products:
-                    product_dict = model_to_dict(product)
+                products = size_filtered_products.filter(category=type_category).order_by('price_per_100ml')[:10]
+                product_dicts = [model_to_dict(product) for product in products]
+                deals[size_category][type_category] = product_dicts
 
-                    price_obj = Price.objects.filter(product=product).order_by('-created_date').first()
-                    if price_obj:
-                        current_price = price_obj.price
-                        size = product.size.replace('NEW', '').split()
-                        units = int(size[0])
-                        mls = int(size[-2])
+        products = size_filtered_products.order_by('price_per_100ml')[:10]
+        product_dicts = [model_to_dict(product) for product in products]
+        deals[size_category]["All Categories"] = product_dicts
 
-                        product_dict['price_per_100ml'] = round((float(current_price) / (units*mls/100.0)),2)
-                        product_dict['current_price'] = current_price
+    deals["All Sizes"] = {}
+    for type_category in list(qs.order_by().values_list('category',flat=True).distinct()):
+        products = qs.filter(category=type_category).order_by('price_per_100ml')[:10]
+        product_dicts = [model_to_dict(product) for product in products]
+        deals["All Sizes"][type_category] = product_dicts
 
-                        product_dicts.append(product_dict)
-                        all_categories_product_dicts.append(product_dict)
-                        all_product_dicts[type_category].append(product_dict)
-                        all_product_dicts["All Categories"].append(product_dict)
-                sorted_deals = sorted(product_dicts, key=itemgetter('price_per_100ml')) 
-                deals[size_category] = deals.get(size_category) or {}
-                deals[size_category][type_category] = sorted_deals[:10]
-        deals[size_category]["All Categories"] = sorted(all_categories_product_dicts, key=itemgetter('price_per_100ml'))[:10]
-
-    # deals["All Sizes"] = {}
-    # for category, product_dicts in all_product_dicts.items():
-    #     deals["All Sizes"][category] = sorted(product_dicts, key=itemgetter('price_per_100ml'))[:10]
+    products = qs.order_by('price_per_100ml')[:10]
+    product_dicts = [model_to_dict(product) for product in products]
+    deals["All Sizes"]["All Categories"] = product_dicts
 
     return render(request, 'deals.html', context={
         'deals': deals,
         'ordered_size_categories': ['All Sizes', 'Singles', 'Small Packs', 'Medium Packs', 'Large Packs', 'Kegs'],
         'ordered_categories': ['All Categories', 'Value', 'Premium', 'Ontario Craft', 'Import', 'Domestic Specialty']
     })
+
+from django.views.generic.list import ListView
+
+class ProductsListView(ListView):
+    model = Product
+    paginate_by = 50
+    template_name = 'list.html'
+
+    def get_queryset(self):
+        size = self.request.GET.get('size', 'All Sizes')
+        category = self.request.GET.get('category', 'All Categories')
+        qs = Product.objects.exclude(category="Non Beer").exclude(category="Non-Alcoholic Beer")
+
+        grouped_products = {}
+        grouped_products['Singles'] = qs.filter(size__startswith='1 X').exclude(size__icontains='keg')
+        grouped_products['Small Packs'] = qs.filter(Q(size__startswith='2 X') \
+                                                    | Q(size__startswith='3 X') \
+                                                    | Q(size__startswith='4 X') \
+                                                    | Q(size__startswith='5 X') \
+                                                    | Q(size__startswith='6 X') \
+                                                    | Q(size__startswith='7 X') \
+                                                    | Q(size__startswith='8 X') \
+                                                    | Q(size__startswith='9 X'))
+        grouped_products['Medium Packs'] = qs.filter(Q(size__startswith='10 X') \
+                                                     | Q(size__startswith='11 X') \
+                                                     | Q(size__startswith='12 X') \
+                                                     | Q(size__startswith='13 X') \
+                                                     | Q(size__startswith='14 X') \
+                                                     | Q(size__startswith='15 X') \
+                                                     | Q(size__startswith='16 X') \
+                                                     | Q(size__startswith='17 X') \
+                                                     | Q(size__startswith='18 X') \
+                                                     | Q(size__startswith='19 X') \
+                                                     | Q(size__startswith='20 X'))
+        grouped_products['Large Packs'] = qs.filter(Q(size__startswith='21 X') \
+                                                    | Q(size__startswith='22 X') \
+                                                    | Q(size__startswith='23 X') \
+                                                    | Q(size__startswith='24 X') \
+                                                    | Q(size__startswith='25 X') \
+                                                    | Q(size__startswith='26 X') \
+                                                    | Q(size__startswith='27 X') \
+                                                    | Q(size__startswith='28 X') \
+                                                    | Q(size__startswith='29 X') \
+                                                    | Q(size__startswith='30 X') \
+                                                    | Q(size__startswith='36 X') \
+                                                    | Q(size__startswith='48 X'))
+        grouped_products['Kegs'] = qs.filter(size__icontains='keg')
+
+        if size in grouped_products:
+            qs = grouped_products[size]
+
+        if category in ['Value', 'Premium', 'Ontario Craft', 'Import', 'Domestic Specialty']:
+            qs = qs.filter(category=category)
+
+        return qs.order_by('price_per_100ml')
+
+    def get_context_data(self, **kwargs):
+        context = super(ProductsListView, self).get_context_data(**kwargs)
+
+        size = self.request.GET.get('size', 'All Sizes')
+        category = self.request.GET.get('category', 'All Categories')
+
+        if size not in ["Singles", "Small Packs", "Medium Packs", "Large Packs", "Kegs"]:
+            size = "All Sizes"
+        if category not in ['Value', 'Premium', 'Ontario Craft', 'Import', 'Domestic Specialty']:
+            category = "All Categories"
+
+        context['size'] = size
+        context["category"] = category
+        return context
 
 def get_price_per_100ml(product):
     current_price = Price.objects.filter(product=product).order_by('-created_date').first().price
