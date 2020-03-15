@@ -56,6 +56,7 @@ class Product(models.Model):
     stores = models.ManyToManyField(Store, blank=True)
     price_per_100ml = models.DecimalField(max_digits=4, decimal_places=2, default=None, blank=True, null=True)
     price_per_abv = models.DecimalField(max_digits=4, decimal_places=2, default=None, blank=True, null=True)
+    current_price = models.DecimalField(max_digits=6, decimal_places=2, default=None, blank=True, null=True)
 
     def __unicode__(self):
         return self.name + " - " + self.size
