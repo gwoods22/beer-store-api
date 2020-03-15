@@ -77,20 +77,42 @@
 <div class='row'>
     Find beers sorted by price per volume.
 </div>
-<div class='row'>
-    <b>Size:&nbsp;</b> {{ size }}
-</div>
 <div class='row' style="margin-bottom:25px">
-    <b>Category:&nbsp;</b> {{ category }}
+    <span style="padding-right:10px">
+      <b>Size:&nbsp;</b>
+      <div class="dropdown">
+        <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          {{ size }} <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu">
+            {% for new_size in sizes %}
+              <a class="dropdown-item" href="/all-beers?categories={{ category }}&size={{ new_size }}">{{ new_size }}</a>
+            {% endfor %}
+        </ul>
+      </div>
+    </span>
+    <span style="padding-left:10px">
+      <b>Category:&nbsp;</b>
+      <div class="dropdown">
+        <button class="btn btn-sm btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          {{ category }} <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu">
+            {% for new_cat in categories %}
+              <a class="dropdown-item" href="/all-beers?categories={{ new_cat }}&size={{ size }}">{{ new_cat }}</a>
+            {% endfor %}
+        </ul>
+      </div>
+    </span>
 </div>
 <div class="pagination" style="margin-bottom: 10px;">
         <span class="step-links" style="margin-left: auto;margin-right: 0;text-align: right">
             {% if page_obj.has_previous %}
-                <a href="?page={{ page_obj.previous_page_number }}" class="btn btn-secondary">previous</a>
+                <a href="?page={{ page_obj.previous_page_number }}" class="btn btn-secondary btn-sm">previous</a>
             {% endif %}
 
             {% if page_obj.has_next %}
-                <a href="?page={{ page_obj.next_page_number }}" class="btn btn-secondary">next</a>
+                <a href="?page={{ page_obj.next_page_number }}" class="btn btn-secondary btn-sm">next</a>
             {% endif %}
             <div style="text-align: right">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</div>
 
@@ -127,7 +149,7 @@
             <a href="?page={{ page_obj.previous_page_number }}" class="btn btn-secondary">previous</a>
         {% endif %}
 
-        <span class="current">
+        <span class="current" style="padding:20px">
             Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
         </span>
 

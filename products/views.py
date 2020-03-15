@@ -173,16 +173,22 @@ class ProductsListView(ListView):
     def get_context_data(self, **kwargs):
         context = super(ProductsListView, self).get_context_data(**kwargs)
 
+        allowed_sizes = ["All Sizes", "Singles", "Small Packs", "Medium Packs", "Large Packs", "Kegs"]
+        allowed_categories = ['All Categories', 'Value', 'Premium', 'Ontario Craft', 'Import', 'Domestic Specialty']
+
         size = self.request.GET.get('size', 'All Sizes')
         category = self.request.GET.get('category', 'All Categories')
 
-        if size not in ["Singles", "Small Packs", "Medium Packs", "Large Packs", "Kegs"]:
+        if size not in allowed_sizes:
             size = "All Sizes"
-        if category not in ['Value', 'Premium', 'Ontario Craft', 'Import', 'Domestic Specialty']:
+        if category not in allowed_categories:
             category = "All Categories"
 
         context['size'] = size
         context["category"] = category
+        context['sizes'] = allowed_sizes
+        context['categories'] = allowed_categories
+
         return context
 
 def get_price_per_100ml(product):
