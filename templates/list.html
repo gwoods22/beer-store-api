@@ -120,11 +120,11 @@
 <div class="pagination" style="margin-bottom: 10px;">
         <span class="step-links" style="margin-left: auto;margin-right: 0;text-align: right">
             {% if page_obj.has_previous %}
-                <a href="?page={{ page_obj.previous_page_number }}" class="btn btn-secondary btn-sm">previous</a>
+                <a href="/all-beers?category={{ category }}&size={{ size }}&sort={{ sort }}&page={{ page_obj.previous_page_number }}" class="btn btn-secondary btn-sm">previous</a>
             {% endif %}
 
             {% if page_obj.has_next %}
-                <a href="?page={{ page_obj.next_page_number }}" class="btn btn-secondary btn-sm">next</a>
+                <a href="/all-beers?category={{ category }}&size={{ size }}&sort={{ sort }}&page={{ page_obj.next_page_number }}" class="btn btn-secondary btn-sm">next</a>
             {% endif %}
             <div style="text-align: right">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</div>
 
@@ -161,8 +161,8 @@
 <div class="pagination" style="justify-content: center;margin-top: 25px;">
     <span class="step-links">
         {% if page_obj.has_previous %}
-            <a href="?page=1" class="btn btn-dark">&laquo; first</a>
-            <a href="?page={{ page_obj.previous_page_number }}" class="btn btn-secondary">previous</a>
+            <a href="/all-beers?category={{ category }}&size={{ size }}&sort={{ sort }}&page=1" class="btn btn-dark">&laquo; first</a>
+            <a href="/all-beers?category={{ category }}&size={{ size }}&sort={{ sort }}&page={{ page_obj.previous_page_number }}" class="btn btn-secondary">previous</a>
         {% endif %}
 
         <span class="current" style="padding:20px">
@@ -170,8 +170,8 @@
         </span>
 
         {% if page_obj.has_next %}
-            <a href="?page={{ page_obj.next_page_number }}" class="btn btn-secondary">next</a>
-            <a href="?page={{ page_obj.paginator.num_pages }}" class="btn btn-dark">last &raquo;</a>
+            <a href="/all-beers?category={{ category }}&size={{ size }}&sort={{ sort }}&page={{ page_obj.next_page_number }}" class="btn btn-secondary">next</a>
+            <a href="/all-beers?category={{ category }}&size={{ size }}&sort={{ sort }}&page={{ page_obj.paginator.num_pages }}" class="btn btn-dark">last &raquo;</a>
         {% endif %}
     </span>
 </div>
