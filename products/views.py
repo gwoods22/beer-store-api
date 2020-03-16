@@ -102,9 +102,9 @@ def deals(request):
                 product_dicts = [model_to_dict(product) for product in products]
                 deals[size_category][type_category] = product_dicts
 
-        products = size_filtered_products[:10]
-        product_dicts = [model_to_dict(product) for product in products]
-        deals[size_category]["All Categories"] = product_dicts
+        # products = size_filtered_products[:10]
+        # product_dicts = [model_to_dict(product) for product in products]
+        # deals[size_category]["All Categories"] = product_dicts
 
     # deals["All Sizes"] = {}
     # for type_category in list(qs.values_list('category',flat=True).distinct()):
@@ -124,7 +124,7 @@ def deals(request):
     return render(request, 'deals.html', context={
         'deals': deals,
         'ordered_size_categories': ['Singles', 'Small Packs', 'Medium Packs', 'Large Packs', 'Kegs'],
-        'ordered_categories': ['All Categories', 'Value', 'Premium', 'Ontario Craft', 'Import', 'Domestic Specialty'],
+        'ordered_categories': ['Value', 'Premium', 'Ontario Craft', 'Import', 'Domestic Specialty'],
         'sort': sort,
         'sort_name': sort_name
     })
