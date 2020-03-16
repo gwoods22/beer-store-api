@@ -11,7 +11,7 @@ urlpatterns = [
     
         url(
         regex=r"^$",
-        view=views.deals,
+        view=views.ProductsListView.as_view(),
         name="deals_page"
     ),
 
