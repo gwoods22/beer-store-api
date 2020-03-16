@@ -62,6 +62,8 @@ class Product(models.Model):
         indexes = [
             models.Index(fields=['price_per_100ml']),
             models.Index(fields=['price_per_abv']),
+            models.Index(fields=['size']),
+            models.Index(fields=['category']),
         ]
 
     def __unicode__(self):
