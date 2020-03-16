@@ -58,6 +58,12 @@ class Product(models.Model):
     price_per_abv = models.DecimalField(max_digits=4, decimal_places=2, default=None, blank=True, null=True)
     current_price = models.DecimalField(max_digits=6, decimal_places=2, default=None, blank=True, null=True)
 
+    class Meta:
+        indexes = [
+            models.Index(fields=['price_per_100ml']),
+            models.Index(fields=['price_per_abv']),
+        ]
+
     def __unicode__(self):
         return self.name + " - " + self.size
         
