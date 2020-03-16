@@ -45,13 +45,20 @@ def home(request):
     
     return render(request, 'index.html', context={'on_sale': list(on_sale.values())})
     
-# @cache_page(60 * 60)
+@cache_page(60 * 60)
 def deals(request):
     """
     Returns home page
     """
+    sort = request.GET.get('sort', 'price_per_100ml')
+
     qs = Product.objects.exclude(category="Non Beer").exclude(category="Non-Alcoholic Beer")
-    
+
+    if sort == 'price_per_abv':
+        qs = qs.order_by('price_per_abv')
+    else:
+        qs = qs.order_by('price_per_100ml')
+
     grouped_products = {}
     grouped_products['Singles'] = qs.filter(size__startswith='1 X').exclude(size__icontains='keg')
     grouped_products['Small Packs'] = qs.filter(Q(size__startswith='2 X')\
@@ -89,30 +96,37 @@ def deals(request):
 
     deals = defaultdict(lambda: defaultdict(list))
     for size_category, size_filtered_products in grouped_products.items():
-        for type_category in list(qs.order_by().values_list('category',flat=True).distinct()):
+        for type_category in list(qs.values_list('category',flat=True).distinct()):
             if type_category != 'Non-Alcoholic Beer' and type_category != "Non Beer":
-                products = size_filtered_products.filter(category=type_category).order_by('price_per_100ml')[:10]
+                products = size_filtered_products.filter(category=type_category)[:10]
                 product_dicts = [model_to_dict(product) for product in products]
                 deals[size_category][type_category] = product_dicts
 
-        products = size_filtered_products.order_by('price_per_100ml')[:10]
+        products = size_filtered_products[:10]
         product_dicts = [model_to_dict(product) for product in products]
         deals[size_category]["All Categories"] = product_dicts
 
     deals["All Sizes"] = {}
-    for type_category in list(qs.order_by().values_list('category',flat=True).distinct()):
-        products = qs.filter(category=type_category).order_by('price_per_100ml')[:10]
+    for type_category in list(qs.values_list('category',flat=True).distinct()):
+        products = qs.filter(category=type_category)[:10]
         product_dicts = [model_to_dict(product) for product in products]
         deals["All Sizes"][type_category] = product_dicts
 
-    products = qs.order_by('price_per_100ml')[:10]
+    products = qs[:10]
     product_dicts = [model_to_dict(product) for product in products]
     deals["All Sizes"]["All Categories"] = product_dicts
+
+    if sort == "price_per_abv":
+        sort_name = '$/etOH (alcohol content)'
+    else:
+        sort_name = '$/100ml'
 
     return render(request, 'deals.html', context={
         'deals': deals,
         'ordered_size_categories': ['All Sizes', 'Singles', 'Small Packs', 'Medium Packs', 'Large Packs', 'Kegs'],
-        'ordered_categories': ['All Categories', 'Value', 'Premium', 'Ontario Craft', 'Import', 'Domestic Specialty']
+        'ordered_categories': ['All Categories', 'Value', 'Premium', 'Ontario Craft', 'Import', 'Domestic Specialty'],
+        'sort': sort,
+        'sort_name': sort_name
     })
 
 from django.views.generic.list import ListView
