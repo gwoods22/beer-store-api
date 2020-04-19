@@ -90,7 +90,7 @@
         </button>
         <ul class="dropdown-menu">
             {% for new_size in sizes %}
-              <a class="dropdown-item" href="/all-beers?category={{ category }}&size={{ new_size }}&sort={{ sort }}">{{ new_size }}</a>
+              <a class="dropdown-item" href="/all-beers?category={{ category }}&size={{ new_size }}&container_type={{ container_type }}&container_size={{ container_size }}&sort={{ sort }}">{{ new_size }}</a>
             {% endfor %}
         </ul>
       </div>
@@ -103,7 +103,33 @@
         </button>
         <ul class="dropdown-menu">
             {% for new_cat in categories %}
-              <a class="dropdown-item" href="/all-beers?category={{ new_cat }}&size={{ size }}&sort={{ sort }}">{{ new_cat }}</a>
+              <a class="dropdown-item" href="/all-beers?category={{ new_cat }}&size={{ size }}&container_type={{ container_type }}&container_size={{ container_size }}&sort={{ sort }}">{{ new_cat }}</a>
+            {% endfor %}
+        </ul>
+      </div>
+    </span>
+    <span style="padding-left:10px">
+      <b>Container Type:&nbsp;</b>
+      <div class="dropdown">
+        <button class="btn btn-sm btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          {{ container_type }} <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu">
+            {% for new_cont_type in container_types %}
+              <a class="dropdown-item" href="/all-beers?category={{ category }}&size={{ size }}&container_type={{ new_cont_type }}&container_size={{ container_size }}&sort={{ sort }}">{{ new_cont_type }}</a>
+            {% endfor %}
+        </ul>
+      </div>
+    </span>
+    <span style="padding-left:10px">
+      <b>Container Size:&nbsp;</b>
+      <div class="dropdown">
+        <button class="btn btn-sm btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          {{ container_size }} <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu">
+            {% for new_cont_size in container_sizes %}
+              <a class="dropdown-item" href="/all-beers?category={{ category }}&size={{ size }}&container_type={{ container_type }}&container_size={{ new_cont_size }}&sort={{ sort }}">{{ new_cont_size }}</a>
             {% endfor %}
         </ul>
       </div>
@@ -115,8 +141,8 @@
           {{ sort_name }} <span class="caret"></span>
         </button>
         <ul class="dropdown-menu">
-          <a class="dropdown-item" href="/all-beers?category={{ category }}&size={{ size }}&sort=price_per_100ml">$/100ml</a>
-          <a class="dropdown-item" href="/all-beers?category={{ category }}&size={{ size }}&sort=price_per_abv">$/etOH (alcohol content)</a>
+          <a class="dropdown-item" href="/all-beers?category={{ category }}&size={{ size }}&container_type={{ container_type }}&container_size={{ container_size }}&sort=price_per_100ml">$/100ml</a>
+          <a class="dropdown-item" href="/all-beers?category={{ category }}&size={{ size }}&container_type={{ container_type }}&container_size={{ container_size }}&sort=price_per_abv">$/etOH (alcohol content)</a>
         </ul>
       </div>
     </span>
@@ -124,11 +150,11 @@
 <div class="pagination" style="margin-bottom: 10px;">
         <span class="step-links" style="margin-left: auto;margin-right: 0;text-align: right">
             {% if page_obj.has_previous %}
-                <a href="/all-beers?category={{ category }}&size={{ size }}&sort={{ sort }}&page={{ page_obj.previous_page_number }}" class="btn btn-secondary btn-sm">previous</a>
+                <a href="/all-beers?category={{ category }}&size={{ size }}&container_type={{ container_type }}&container_size={{ container_size }}&sort={{ sort }}&page={{ page_obj.previous_page_number }}" class="btn btn-dark btn-sm">previous</a>
             {% endif %}
 
             {% if page_obj.has_next %}
-                <a href="/all-beers?category={{ category }}&size={{ size }}&sort={{ sort }}&page={{ page_obj.next_page_number }}" class="btn btn-secondary btn-sm">next</a>
+                <a href="/all-beers?category={{ category }}&size={{ size }}&container_type={{ container_type }}&container_size={{ container_size }}&sort={{ sort }}&page={{ page_obj.next_page_number }}" class="btn btn-dark btn-sm">next</a>
             {% endif %}
             <div style="text-align: right">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</div>
 
@@ -165,8 +191,8 @@
 <div class="pagination" style="justify-content: center;margin-top: 25px;">
     <span class="step-links">
         {% if page_obj.has_previous %}
-            <a href="/all-beers?category={{ category }}&size={{ size }}&sort={{ sort }}&page=1" class="btn btn-dark">&laquo; first</a>
-            <a href="/all-beers?category={{ category }}&size={{ size }}&sort={{ sort }}&page={{ page_obj.previous_page_number }}" class="btn btn-secondary">previous</a>
+            <a href="/all-beers?category={{ category }}&size={{ size }}&container_type={{ container_type }}&container_size={{ container_size }}&sort={{ sort }}&page=1" class="btn btn-secondary">&laquo; first</a>
+            <a href="/all-beers?category={{ category }}&size={{ size }}&container_type={{ container_type }}&container_size={{ container_size }}&sort={{ sort }}&page={{ page_obj.previous_page_number }}" class="btn btn-dark">previous</a>
         {% endif %}
 
         <span class="current" style="padding:20px">
@@ -174,8 +200,8 @@
         </span>
 
         {% if page_obj.has_next %}
-            <a href="/all-beers?category={{ category }}&size={{ size }}&sort={{ sort }}&page={{ page_obj.next_page_number }}" class="btn btn-secondary">next</a>
-            <a href="/all-beers?category={{ category }}&size={{ size }}&sort={{ sort }}&page={{ page_obj.paginator.num_pages }}" class="btn btn-dark">last &raquo;</a>
+            <a href="/all-beers?category={{ category }}&size={{ size }}&container_type={{ container_type }}&container_size={{ container_size }}&sort={{ sort }}&page={{ page_obj.next_page_number }}" class="btn btn-dark">next</a>
+            <a href="/all-beers?category={{ category }}&size={{ size }}&container_type={{ container_type }}&container_size={{ container_size }}&sort={{ sort }}&page={{ page_obj.paginator.num_pages }}" class="btn btn-secondary">last &raquo;</a>
         {% endif %}
     </span>
 </div>

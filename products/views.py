@@ -138,22 +138,39 @@ class ProductsListView(ListView):
 
     def get_queryset(self):
         size = self.request.GET.get('size', 'All Sizes')
+        container_type = self.request.GET.get('container_type', 'All Types')
+        container_size = self.request.GET.get('container_size', 'All Sizes')
         category = self.request.GET.get('category', 'All Categories')
         sort = self.request.GET.get('sort', 'price_per_100ml')
 
         qs = Product.objects.exclude(category="Non Beer").exclude(category="Non-Alcoholic Beer")
 
+        if container_type == "Bottle":
+            qs = qs.filter(size__icontains='bottle').exclude(size__icontains='keg')
+        elif container_type == "Can":
+            qs = qs.filter(size__icontains='can').exclude(size__icontains='keg')
+
+        small_volumes = Q(size__icontains='207 ml') | Q(size__icontains='236 ml') | Q(size__icontains='330 ml') | Q(size__icontains='341 ml') | Q(size__icontains='355 ml')
+        medium_volumes = Q(size__icontains='500 ml') | Q(size__icontains='473 ml') | Q(size__icontains='568 ml')
+        if container_size == "Small":
+            qs = qs.filter(small_volumes).exclude(size__icontains='keg')
+        elif container_size == "Medium":
+            qs = qs.filter(small_volumes | medium_volumes).exclude(size__icontains='keg')
+
+
         grouped_products = {}
-        grouped_products['Singles'] = qs.filter(size__startswith='1 X').exclude(size__icontains='keg')
-        grouped_products['Small Packs'] = qs.filter(Q(size__startswith='2 X') \
+        singles_qs = Q(size__startswith='1 X')
+        grouped_products['Singles'] = qs.filter(singles_qs)
+        small_pack_qs = Q(size__startswith='2 X') \
                                                     | Q(size__startswith='3 X') \
                                                     | Q(size__startswith='4 X') \
                                                     | Q(size__startswith='5 X') \
                                                     | Q(size__startswith='6 X') \
                                                     | Q(size__startswith='7 X') \
                                                     | Q(size__startswith='8 X') \
-                                                    | Q(size__startswith='9 X'))
-        grouped_products['Medium Packs'] = qs.filter(Q(size__startswith='10 X') \
+                                                    | Q(size__startswith='9 X')
+        grouped_products['Small Packs'] = qs.filter(small_pack_qs | singles_qs).exclude(size__icontains='keg')
+        medium_pack_qs = Q(size__startswith='10 X') \
                                                      | Q(size__startswith='11 X') \
                                                      | Q(size__startswith='12 X') \
                                                      | Q(size__startswith='13 X') \
@@ -163,8 +180,10 @@ class ProductsListView(ListView):
                                                      | Q(size__startswith='17 X') \
                                                      | Q(size__startswith='18 X') \
                                                      | Q(size__startswith='19 X') \
-                                                     | Q(size__startswith='20 X'))
-        grouped_products['Large Packs'] = qs.filter(Q(size__startswith='21 X') \
+                                                     | Q(size__startswith='20 X')
+        grouped_products['Medium Packs'] = qs.filter(medium_pack_qs | small_pack_qs | singles_qs).exclude(size__icontains='keg')
+
+        large_pack_qs = Q(size__startswith='21 X') \
                                                     | Q(size__startswith='22 X') \
                                                     | Q(size__startswith='23 X') \
                                                     | Q(size__startswith='24 X') \
@@ -175,8 +194,9 @@ class ProductsListView(ListView):
                                                     | Q(size__startswith='29 X') \
                                                     | Q(size__startswith='30 X') \
                                                     | Q(size__startswith='36 X') \
-                                                    | Q(size__startswith='48 X'))
-        grouped_products['Kegs'] = qs.filter(size__icontains='keg')
+                                                    | Q(size__startswith='48 X')
+        grouped_products['Large Packs'] = qs.filter(large_pack_qs | medium_pack_qs | small_pack_qs | singles_qs).exclude(size__icontains='keg')
+        grouped_products['Kegs'] = qs.filter(Q(size__icontains='keg'))
 
         if size in grouped_products:
             qs = grouped_products[size]
@@ -194,15 +214,23 @@ class ProductsListView(ListView):
 
         allowed_sizes = ["All Sizes", "Singles", "Small Packs", "Medium Packs", "Large Packs", "Kegs"]
         allowed_categories = ['All Categories', 'Value', 'Premium', 'Ontario Craft', 'Import', 'Domestic Specialty']
+        allowed_container_types = ["All Types", "Bottle", "Can"]
+        allowed_container_sizes = ["All Sizes", "Small", "Medium", "Large"]
 
         size = self.request.GET.get('size', 'All Sizes')
         category = self.request.GET.get('category', 'All Categories')
+        container_type = self.request.GET.get('container_type', 'All Types')
+        container_size = self.request.GET.get('container_size', 'All Sizes')
         sort = self.request.GET.get('sort', 'price_per_100ml')
 
         if size not in allowed_sizes:
             size = "All Sizes"
         if category not in allowed_categories:
             category = "All Categories"
+        if container_size not in allowed_container_sizes:
+            container_size = "All Categories"
+        if container_type not in allowed_container_types:
+            container_type = "All Types"
         if sort == "price_per_abv":
             sort_name = '$/etOH (alcohol content)'
         else:
@@ -210,10 +238,14 @@ class ProductsListView(ListView):
 
         context['size'] = size
         context["category"] = category
+        context['container_type'] = container_type
+        context['container_size'] = container_size
         context["sort"] = sort
         context["sort_name"] = sort_name
         context['sizes'] = allowed_sizes
         context['categories'] = allowed_categories
+        context['container_types'] = allowed_container_types
+        context['container_sizes'] = allowed_container_sizes
 
         return context
 
