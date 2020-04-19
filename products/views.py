@@ -331,7 +331,7 @@ def product_by_id(request, product_id):
     
     # return data   
     return _response(request, model_dict)
-    
+
 def product_prices_by_id(request, product_id):
     # get product by id
     product = Product.objects.get(product_id = int(product_id))
@@ -422,21 +422,22 @@ def beer_prices_by_id(request, beer_id):
     ids = []
     for product in products:
         qs = Price.objects.filter(product=product).order_by('-created_date')[:30]
-        model_dict = model_to_dict(product)
-        model_dict['prices'] = json.dumps([{'x': float(o.created_date.strftime('%s'))* 1000, 'y': float(o.price)} for o in qs])
-        model_dict['current_price'] = qs.first().price
-        
-        ids.append(model_dict['product_id'])
-        
-        size = model_dict['size'].replace('NEW', '').split()
-        container = size[2]
-        model_dict['units'] = int(size[0])
-        
-        mls = int(size[-2])
-        model_dict['price_per_100ml'] = round((float(model_dict['current_price']) / (model_dict['units']*mls/100)),2)
-        
-        params['products'][container] = params['products'].get(container) or []
-        params['products'][container].append(model_dict)
+        if len(qs) > 0:
+            model_dict = model_to_dict(product)
+            model_dict['prices'] = json.dumps([{'x': float(o.created_date.strftime('%s'))* 1000, 'y': float(o.price)} for o in qs])
+            model_dict['current_price'] = qs.first().price
+
+            ids.append(model_dict['product_id'])
+
+            size = model_dict['size'].replace('NEW', '').split()
+            container = size[2]
+            model_dict['units'] = int(size[0])
+
+            mls = int(size[-2])
+            model_dict['price_per_100ml'] = round((float(model_dict['current_price']) / (model_dict['units']*mls/100)),2)
+
+            params['products'][container] = params['products'].get(container) or []
+            params['products'][container].append(model_dict)
     
     for container, product_list in params['products'].items():
         params['products'][container] = sorted(product_list, key=itemgetter('units')) 
