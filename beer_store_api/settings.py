@@ -37,15 +37,15 @@ CACHES = {
     }
 }
 DATABASES = {
-    # 'default': {
-    #     'ENGINE': 'django.db.backends.postgresql_psycopg2',
-    #     'NAME': 'beerstore',
-    #     'USER': 'username',
-    #     'PASSWORD': 'password',
-    #     'HOST': 'localhost',
-    #     'PORT': '',
-    # }
-    'default': dj_database_url.config(default=os.environ.get('DATABASE_URL', 'postgres://localhost/beerstore'))
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'beerstore',
+        'USER': 'postgres',
+        'PASSWORD': 'password',
+        'HOST': 'localhost',
+        'PORT': '',
+    }
+    # 'default': dj_database_url.config(default=os.environ.get('DATABASE_URL', 'postgres://localhost/beerstore'))
 }
 
 MIDDLEWARE = [
