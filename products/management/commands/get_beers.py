@@ -9,6 +9,7 @@ import pdb;
 import json
 import sys
 from selenium import webdriver
+from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
@@ -29,7 +30,7 @@ class Command(BaseCommand):
         # chrome_options.binary_location = '/usr/bin'
         chrome_options.add_argument('--disable-gpu')
         chrome_options.add_argument('--no-sandbox')
-        browser = webdriver.Chrome(chrome_options=chrome_options)
+        browser = webdriver.Chrome(ChromeDriverManager().install(),chrome_options=chrome_options)
         browser.get(TOP_URL + "/OrderProductSelection.aspx")
         
         try:
@@ -77,7 +78,7 @@ class Command(BaseCommand):
                 # chrome_options.binary_location = '/usr/bin'
                 chrome_options.add_argument('--disable-gpu')
                 chrome_options.add_argument('--no-sandbox')
-                browser = webdriver.Chrome(chrome_options=chrome_options)
+                browser = webdriver.Chrome(ChromeDriverManager().install(),chrome_options=chrome_options)
                 
                 beer_url = beer["href"]
 
