@@ -71,7 +71,9 @@ class Command(BaseCommand):
             # find all beers
             beers = soup_beers.find_all("a", "brand-link")
 
-            for beer in beers:
+            print(f"Scraping {len(beers)} beers")
+            for beerIndex, beer in enumerate(beers):
+                print(f"Scraping beer {beerIndex+1}")
                 chrome_options = Options()
                 chrome_options.add_argument('--headless')
                 chrome_options.add_argument("window-size=1024,768")
